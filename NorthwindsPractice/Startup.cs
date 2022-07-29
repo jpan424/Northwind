@@ -6,9 +6,15 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.Common;
+using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace NorthwindsPractice
@@ -26,6 +32,13 @@ namespace NorthwindsPractice
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddSingleton<DbConnection>(provider =>
+            {
+                DbConnection conn = new SqlConnection();
+                conn.ConnectionString = Configuration.GetConnectionString("MVC");
+                return conn;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
