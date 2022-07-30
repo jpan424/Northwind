@@ -2,7 +2,8 @@
 
 namespace NorthwindService
 {
-    public class Class1
+    public class ProductService
     {
+
     }
 }
