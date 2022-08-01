@@ -8,6 +8,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using NorthwindRepository;
+using NorthwindService;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -34,14 +35,19 @@ namespace NorthwindsPractice
         {
             services.AddControllers();
 
-            services.AddSingleton<DbConnection>(provider =>
+            services.AddSingleton<IDbConnection,SqlConnection>(provider =>
             {
-                DbConnection conn = new SqlConnection();
+                SqlConnection conn = new SqlConnection();
                 conn.ConnectionString = Configuration.GetConnectionString("MVC");
                 return conn;
             });
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<IProductService, ProductService>();
+            services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1", new OpenApiInfo { Title = "NorthwindsPractice", Version = "v1" });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -51,6 +57,13 @@ namespace NorthwindsPractice
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "NorthwindsPractice");
+            });
 
             app.UseHttpsRedirection();
 

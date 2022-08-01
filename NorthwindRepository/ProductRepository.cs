@@ -9,8 +9,8 @@ namespace NorthwindRepository
 {
     public class ProductRepository : IProductRepository
     {
-        private readonly DbConnection _dbConnection;
-        public ProductRepository(DbConnection dbConnection)
+        private readonly IDbConnection _dbConnection;
+        public ProductRepository(IDbConnection dbConnection)
         {
             _dbConnection = dbConnection;
         }
